@@ -27,16 +27,34 @@ public class Game implements GameInterface{
 
     @Override
     public void playRound() {
+        //clearScreen();
+        // printBoard(board);
+        //
 
     }
 
     @Override
-    public void tryToMakeMove() {
-
+    public boolean tryToMakeMove() {
+        // move can be made if:
+        // 1. move is from a black to another black field
+        // 2. starting field has a pawn
+        // 3. target field is empty
+        // returns true if move is valid -> makeMove()
+        // returns false if move isn't valid -> player needs to provide another input
     }
 
     @Override
-    public void checkForWinner() {
+    public String checkForWinner(Board board) {
 
+        return "";
+    }
+
+    public String printWinner(Board board) {
+
+        return "";
+    }
+
+    public int[] makeMove() {
+        
     }
 }
