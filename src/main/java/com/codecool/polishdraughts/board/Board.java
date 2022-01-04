@@ -32,16 +32,14 @@ public class Board {
         for (int i = 0; i < getBoard().length; i++) {
             sb.append(String.format("%3s", i + 1));
         }
+
         sb.append("\n");
+
         for (int x = 0; x < getBoard().length; x++) {
             sb.append((char) ('A' + x));
             for (int y = 0; y < getBoard()[x].length; y++) {
                 if (getPawnsBoard()[x][y] != null) {
-                    if (getPawnsBoard()[x][y].getColor().equals(ColorEnum.BLACK)) {
-                        getBoard()[x][y] = "X";
-                    } else {
-                        getBoard()[x][y] = "O";
-                    }
+                    getBoard()[x][y] = getPawnsBoard()[x][y].getColor().getPawnChar();
                 }
                 sb.append(String.format("%3s", getBoard()[x][y]));
             }

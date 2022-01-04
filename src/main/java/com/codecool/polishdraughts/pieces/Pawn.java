@@ -22,7 +22,7 @@ public class Pawn {
     }
 
     public String getPownChar() {
-        return this.color.getPownChar();
+        return this.color.getPawnChar();
     }
 
     public void setColor(ColorEnum color) {
