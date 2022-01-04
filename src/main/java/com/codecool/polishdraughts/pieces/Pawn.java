@@ -21,7 +21,7 @@ public class Pawn {
         return color;
     }
 
-    public String getPownChar() {
+    public String getPawnChar() {
         return this.color.getPawnChar();
     }
 

@@ -2,7 +2,7 @@ package com.codecool.polishdraughts.pieces;
 
 public enum ColorEnum {
 
-    BLACK(Pawn.ANSI_WHITE_BACKGROUND + Pawn.ANSI_BLACK + "X" + Pawn.ANSI_BLACK_BACKGROUND + Pawn.ANSI_RESET), WHITE("O");
+    BLACK("X"), WHITE("O");
 
     private String pawnChar;
 
