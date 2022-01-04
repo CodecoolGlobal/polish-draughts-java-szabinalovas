@@ -4,6 +4,6 @@ public interface GameInterface {
 
     void start();
     void playRound();
-    void tryToMakeMove();
-    void checkForWinner();
+    boolean tryToMakeMove();
+    String checkForWinner();
 }
