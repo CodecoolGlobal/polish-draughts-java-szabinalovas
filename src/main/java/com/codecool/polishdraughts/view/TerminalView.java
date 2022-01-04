@@ -16,4 +16,8 @@ public class TerminalView {
         if (userInput.equals("QUIT")) System.exit(0);
         return userInput;
     }
+
+    public static boolean isCoordinatesInputFormatValid(String userInput) {
+        return userInput.matches("^[A-Z][1-9]{1,2}$");
+    }
 }
