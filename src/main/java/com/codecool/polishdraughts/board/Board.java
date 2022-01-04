@@ -90,4 +90,12 @@ public class Board {
         pawnsBoard[x][y] = null;
         pawnToRemove.setPosition(new Coordinates(-1, -1));
     }
+
+    public void movePawn(Pawn movingPawn, int xToMove, int yToMove) {
+        int oldX = movingPawn.getPosition().getX();
+        int oldY = movingPawn.getPosition().getY();
+        pawnsBoard[oldX][oldY] = null;
+        movingPawn.setPosition(new Coordinates(xToMove, yToMove));
+        pawnsBoard[xToMove][yToMove] = movingPawn;
+    }
 }
