@@ -83,4 +83,11 @@ public class Board {
         }
         return pawnsBoard;
     }
+
+    public void removePawn(Pawn pawnToRemove) {
+        int x = pawnToRemove.getPosition().getX();
+        int y = pawnToRemove.getPosition().getY();
+        pawnsBoard[x][y] = null;
+        pawnToRemove.setPosition(new Coordinates(-1, -1));
+    }
 }
