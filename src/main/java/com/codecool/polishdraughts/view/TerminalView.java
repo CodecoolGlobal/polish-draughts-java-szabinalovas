@@ -1,6 +1,9 @@
 package com.codecool.polishdraughts.view;
 
+
 import java.util.Scanner;
+import com.codecool.polishdraughts.board.Board;
+
 
 public class TerminalView {
 
@@ -8,6 +11,7 @@ public class TerminalView {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
+
 
     public static String readInput(String prompt) {
         System.out.print(prompt + " ");
@@ -23,5 +27,9 @@ public class TerminalView {
 
     public static boolean isMenuInputValid(String userInput) {
         return userInput.matches("^[1-9]$");
+
+    public void printBoard(Board board) {
+        System.out.println(board.toString());
+
     }
 }
