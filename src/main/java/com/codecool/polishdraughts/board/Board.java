@@ -4,52 +4,82 @@ import com.codecool.polishdraughts.pieces.ColorEnum;
 import com.codecool.polishdraughts.pieces.Coordinates;
 import com.codecool.polishdraughts.pieces.Pawn;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Board {
 
     private String[][] board;
+    private Pawn[][] pawnsBoard;
     private final int NUMBER_OF_INIT_PAWN_LINES = 4;
+
+    public String[][] getBoard() {
+        return board;
+    }
+
+    public Pawn[][] getPawnsBoard() {
+        return pawnsBoard;
+    }
 
     public Board(int n) {
         if (10 <= n && n <= 20) {
             this.board = initBoard(n);
+            this.pawnsBoard = initPawnsBoard(n);
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" ");
+        for (int i = 0; i < getBoard().length; i++) {
+            sb.append(String.format("%3s", i + 1));
+        }
+        sb.append("\n");
+        for (int x = 0; x < getBoard().length; x++) {
+            sb.append((char) ('A' + x));
+            for (int y = 0; y < getBoard()[x].length; y++) {
+                if (getPawnsBoard()[x][y] != null) {
+                    if (getPawnsBoard()[x][y].getColor().equals(ColorEnum.BLACK)) {
+                        getBoard()[x][y] = "X";
+                    } else {
+                        getBoard()[x][y] = "O";
+                    }
+                }
+                sb.append(String.format("%3s", getBoard()[x][y]));
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     public String[][] initBoard(int n) {
         board = new String[n][n];
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) {
-                    board[i][j] = " ";
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < board[x].length; y++) {
+                if ((x % 2 == 0 && y % 2 == 0) || (x % 2 != 0 && y % 2 != 0)) {
+                    board[x][y] = " ";
                 } else {
-                    board[i][j] = "#";
+                    board[x][y] = "#";
                 }
-                System.out.printf("%3s", board[i][j]);
             }
-            System.out.println();
         }
         return board;
     }
 
     public Pawn[][] initPawnsBoard(int n) {
-        Pawn[][] pawnsBoard = new Pawn[n][n];
+        pawnsBoard = new Pawn[n][n];
         // az első 4 sor fekete mezőire pakolja a fekete gyalogokat
-        for (int i = 0; i < NUMBER_OF_INIT_PAWN_LINES; i++) {
-            for (int j = 0; j < pawnsBoard[0].length; j++) {
-                if (!((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))) {
-                    pawnsBoard[i][j] = new Pawn(ColorEnum.BLACK, new Coordinates(i, j));
+        for (int x = 0; x < NUMBER_OF_INIT_PAWN_LINES; x++) {
+            for (int y = 0; y < pawnsBoard[0].length; y++) {
+                if (!((x % 2 == 0 && y % 2 == 0) || (x % 2 != 0 && y % 2 != 0))) {
+                    pawnsBoard[x][y] = new Pawn(ColorEnum.BLACK, new Coordinates(x, y));
                 }
             }
         }
         // az utolsó 4 sor fekete mezőire pakolja a fehér gyalogokat
-        for (int i = board.length - NUMBER_OF_INIT_PAWN_LINES - 1; i < board.length; i++) {
-            for (int j = 0; j < pawnsBoard[0].length; j++) {
-                if (!((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))) {
-                    pawnsBoard[i][j] = new Pawn(ColorEnum.WHITE, new Coordinates(i, j));
+        for (int x = board.length - NUMBER_OF_INIT_PAWN_LINES; x < board.length; x++) {
+            for (int y = 0; y < pawnsBoard[0].length; y++) {
+                if (!((x % 2 == 0 && y % 2 == 0) || (x % 2 != 0 && y % 2 != 0))) {
+                    pawnsBoard[x][y] = new Pawn(ColorEnum.WHITE, new Coordinates(x, y));
                 }
             }
         }
