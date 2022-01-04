@@ -1,15 +1,14 @@
 package com.codecool.polishdraughts.game;
 
 import com.codecool.polishdraughts.board.Board;
+import com.codecool.polishdraughts.pieces.ColorEnum;
 import com.codecool.polishdraughts.pieces.Pawn;
 import com.codecool.polishdraughts.view.TerminalView;
 
 public class Game implements GameInterface{
     private Board board;
+    private Pawn[][] pawnBoard;
     private boolean isGameRunning;
-
-
-
 
 
     public void start() {
@@ -27,7 +26,7 @@ public class Game implements GameInterface{
         TerminalView.clearScreen();
         //board.initBoard(size);
         //Board.movePawn();
-        checkForWinner(board);
+        printWinner(pawnBoard); // only prints if there is a winner
 
     }
 
@@ -61,14 +60,37 @@ public class Game implements GameInterface{
         return isTargetBlack;
     }
 
-    public String checkForWinner(Board board) {
-
-        return "";
+    // checks the colorEnum of pawns on each field
+    public String checkForWinner(Pawn[][]board) {
+        int blacks = 0;
+        int whites = 0;
+        String winner = "";
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j].getColor().equals(ColorEnum.BLACK)) {
+                    blacks++;
+                } else if (board[i][j].getColor().equals(ColorEnum.WHITE)) {
+                    whites++;
+                }
+            }
+        }
+        if (blacks == 0) {
+            winner = "white";
+        } else if (whites == 0) {
+            winner = "black";
+        }
+        return winner;
     }
 
-    public String printWinner(Board board) {
-
-        return "";
+    public void printWinner(Pawn[][] board) {
+        String winner = checkForWinner(board);
+        String messageOnConsole = "";
+        if (winner == "white") {
+            messageOnConsole = "White has won.";
+        } else if (winner == "black") {
+            messageOnConsole = "Black has won.";
+        }
+        System.out.println(messageOnConsole);;
     }
 
 
