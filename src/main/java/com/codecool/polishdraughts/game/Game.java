@@ -29,7 +29,7 @@ public class Game implements GameInterface{
     public void playRound() {
         //clearScreen();
         // printBoard(board);
-        //
+        // checkForWinner()
 
     }
 
@@ -41,6 +41,8 @@ public class Game implements GameInterface{
         // 3. target field is empty
         // returns true if move is valid -> makeMove()
         // returns false if move isn't valid -> player needs to provide another input
+
+        return false;
     }
 
     @Override
@@ -54,7 +56,9 @@ public class Game implements GameInterface{
         return "";
     }
 
+    // if trytomakemove returns true
     public int[] makeMove() {
-        
+
+        return new int[]{};
     }
 }
