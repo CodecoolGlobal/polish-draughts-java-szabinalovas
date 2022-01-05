@@ -1,5 +1,6 @@
 package com.codecool.polishdraughts.screens;
 
+import com.codecool.polishdraughts.game.Game;
 import com.codecool.polishdraughts.util.Util;
 import com.codecool.polishdraughts.view.TerminalView;
 
@@ -7,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class IntroScreen implements Screen {
+    private Game game = new Game();
 
     @Override
     public void display() {
@@ -24,7 +26,7 @@ public class IntroScreen implements Screen {
         System.out.println(" 2 -  Play");
         System.out.println(" 3 -  Exit");
         System.out.println();
-        System.out.print("Choose from the below options: ");
+        System.out.print("Choose from the below options:");
         String userInput;
         boolean isInputValid;
         do {
@@ -35,8 +37,11 @@ public class IntroScreen implements Screen {
         switch (userInput) {
             case "1":
                 //Implement game rules screen here
-            case "2": break;
-            default: System.exit(0);
+            case "2":
+                game.start();
+                break;
+            default:
+                System.exit(0);
         }
     }
 
