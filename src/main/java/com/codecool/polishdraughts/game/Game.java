@@ -98,9 +98,9 @@ public class Game implements GameInterface {
     public void printWinner(Pawn[][] board) {
         String winner = checkForWinner(board);
         String messageOnConsole = "";
-        if (winner == "white") {
+        if (winner.equals( "white")) {
             messageOnConsole = "White has won.";
-        } else if (winner == "black") {
+        } else if (winner.equals( "black")) {
             messageOnConsole = "Black has won.";
         }
         System.out.println(messageOnConsole);
