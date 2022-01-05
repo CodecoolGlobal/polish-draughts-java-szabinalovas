@@ -20,7 +20,7 @@ public class TerminalView {
     }
 
     public static boolean isCoordinatesInputFormatValid(String userInput) {
-        return userInput.matches("^[A-Z][1-9]{1,2}$");
+        return userInput.matches("^[A-Z]\\d{1,2}$");
     }
 
     public static boolean isMenuInputValid(String userInput) {
