@@ -30,18 +30,19 @@ public class Game implements GameInterface{
 
     }
 
+    // move can be made if:
+    // 1. move is from a black to another black field
+    // 2. starting field has a pawn
+    // 3. target field is empty
+    // returns true if move is valid -> Board movePawn()
+    // returns false if move isn't valid -> player needs to provide another input
     public boolean tryToMakeMove(Pawn[][] board, int fromX, int fromY, int toX, int toY) {
         boolean isMoveOK = false;
         if (board[fromX][fromY] != null && board[toX][toY] == null && targetFieldIsBlack(board)) {
             //Board.movePawn(); to be implemented in Board class;
             isMoveOK = true;
         }
-        // move can be made if:
-        // 1. move is from a black to another black field
-        // 2. starting field has a pawn
-        // 3. target field is empty
-        // returns true if move is valid -> Board movePawn()
-        // returns false if move isn't valid -> player needs to provide another input
+
         else {
             System.out.println("This is not a valid move. Try again.");
         }
@@ -90,7 +91,8 @@ public class Game implements GameInterface{
         } else if (winner == "black") {
             messageOnConsole = "Black has won.";
         }
-        System.out.println(messageOnConsole);;
+        System.out.println(messageOnConsole);
+        isGameRunning = false;
     }
 
 
