@@ -7,6 +7,10 @@ import com.codecool.polishdraughts.pieces.Pawn;
 import com.codecool.polishdraughts.view.TerminalView;
 
 public class Game implements GameInterface {
+    private static final int NUMBER_OF_COORDINATE_ELEMENTS = 2;
+    private static final int ASCII_DEC_CODE_UPPERCASE_LETTER_A = 65;
+    private static final int INDEX_CORRECTION = 1;
+    private static final int MAX_NUMBER_OF_ROWS_AND_COLUMNS = 20;
     private Board board;
     private Pawn[][] pawnBoard;
     private boolean isGameRunning;
@@ -19,7 +23,7 @@ public class Game implements GameInterface {
         boolean isInputValid;
         do {
             String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
-            isInputValid = userInput.matches("^\\d{2}$") && Integer.parseInt(userInput) < 21;
+            isInputValid = userInput.matches("^\\d{2}$") && Integer.parseInt(userInput) > 9 && Integer.parseInt(userInput) < 21;
             if (!isInputValid) System.out.print("Invalid input. Please retry. ");
             size = Integer.parseInt(userInput);
         } while (!isInputValid);
@@ -122,5 +126,26 @@ public class Game implements GameInterface {
         isGameRunning = false;
     }
 
+    public int[] getMove(int player) {
+        int[] coordinates = new int[NUMBER_OF_COORDINATE_ELEMENTS];
+        String userInput;
+        boolean isCoordinatesOutsideBoard = false;
+        boolean isInputFormatValid;
+        do {
+            userInput = TerminalView.readInput("Player " + player + " comes next:");
+            isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
+            if (!isInputFormatValid) {
+                System.out.println("Invalid input format. Please retry.");
+                continue;
+            }
+            coordinates[0] = userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A;
+            coordinates[1] = Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION;
 
+            isCoordinatesOutsideBoard = coordinates[0] > board.getSize() - INDEX_CORRECTION || coordinates[1] > board.getSize() - INDEX_CORRECTION;
+            if (isCoordinatesOutsideBoard) {
+                System.out.println("Invalid input: coordinates are outside of board. Please retry.");
+            }
+        } while (isCoordinatesOutsideBoard || !isInputFormatValid);
+        return coordinates;
+    }
 }
