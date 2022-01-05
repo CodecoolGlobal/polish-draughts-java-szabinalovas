@@ -25,6 +25,10 @@ public class Board {
         }
     }
 
+    public int getSize() {
+        return board.length;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
