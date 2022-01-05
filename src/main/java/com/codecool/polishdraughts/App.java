@@ -1,18 +1,19 @@
 package com.codecool.polishdraughts;
 
-import com.codecool.polishdraughts.board.Board;
-import com.codecool.polishdraughts.view.TerminalView;
+import com.codecool.polishdraughts.screens.IntroScreen;
 
-import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("Give me a number between 10 and 20:");
-        Scanner sc = new Scanner(System.in);
-        int size = sc.nextInt();
-        Board board = new Board(size);
-        TerminalView view = new TerminalView();
-        view.printBoard(board);
+        IntroScreen intro = new IntroScreen();
+        intro.display();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ie) {
+            System.out.println("sleep is not working");
+        }
+        intro.menu();
     }
 }

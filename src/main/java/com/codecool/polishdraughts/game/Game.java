@@ -5,28 +5,41 @@ import com.codecool.polishdraughts.pieces.ColorEnum;
 import com.codecool.polishdraughts.pieces.Pawn;
 import com.codecool.polishdraughts.view.TerminalView;
 
-public class Game implements GameInterface{
+public class Game implements GameInterface {
     private Board board;
     private Pawn[][] pawnBoard;
     private boolean isGameRunning;
 
 
     public void start() {
-        int player = 1;
-       // this.board = Board.getBoard(); // getter to be implemented
+        int player = 1; //should be replaced with Pawn instance
         TerminalView.clearScreen();
-        this.isGameRunning = true;
+        int size;
+        boolean isInputValid;
+        do {
+            String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
+            isInputValid = userInput.matches("^\\d{2}$") && Integer.parseInt(userInput) < 21;
+            if (!isInputValid) System.out.print("Invalid input. Please retry. ");
+            size = Integer.parseInt(userInput);
+        } while (!isInputValid);
+        board = new Board(size);
+        //this.isGameRunning = true; //commented out to prevent infinite loop
         while (isGameRunning) {
-            playRound();
-            player = player == 1 ? 2 : 1;
+            playRound();    // valszeg kell neki egy player parameter
+            player = player == 1 ? 2 : 1;   //should be replaced with Pawn instance
         }
     }
 
     public void playRound() {
         TerminalView.clearScreen();
-        //board.initBoard(size);
+        TerminalView.printBoard(board);
+        //getMove(int player);
+        //Pawn.isValidMove(Coordinates newPos);
+        //tryToMakeMove;
         //Board.movePawn();
-        printWinner(pawnBoard); // only prints if there is a winner
+        //Board.removePawn(); - if needed
+        //checkForWinner(); -> ennek kellenne meghívni a printWinner metodust
+        //printWinner(pawnBoard); // only prints if there is a winner
 
     }
 
@@ -41,9 +54,7 @@ public class Game implements GameInterface{
         if (board[fromX][fromY] != null && board[toX][toY] == null && targetFieldIsBlack(board)) {
             //Board.movePawn(); to be implemented in Board class;
             isMoveOK = true;
-        }
-
-        else {
+        } else {
             System.out.println("This is not a valid move. Try again.");
         }
         return isMoveOK;
@@ -53,8 +64,8 @@ public class Game implements GameInterface{
         boolean isTargetBlack = false;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                if ((i+j) % 2 != 0) {
-                   isTargetBlack = true;
+                if ((i + j) % 2 != 0) {
+                    isTargetBlack = true;
                 }
             }
         }
@@ -62,7 +73,7 @@ public class Game implements GameInterface{
     }
 
     // checks the colorEnum of pawns on each field
-    public String checkForWinner(Pawn[][]board) {
+    public String checkForWinner(Pawn[][] board) {
         int blacks = 0;
         int whites = 0;
         String winner = "";
@@ -83,6 +94,7 @@ public class Game implements GameInterface{
         return winner;
     }
 
+    // should be moved to TerminalView
     public void printWinner(Pawn[][] board) {
         String winner = checkForWinner(board);
         String messageOnConsole = "";
