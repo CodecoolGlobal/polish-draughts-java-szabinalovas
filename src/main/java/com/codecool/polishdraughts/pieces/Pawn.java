@@ -25,6 +25,7 @@ public class Pawn {
         return this.color.getPawnChar();
     }
 
+
     public void setColor(ColorEnum color) {
         this.color = color;
     }
@@ -45,10 +46,10 @@ public class Pawn {
         isCrowned = crowned;
     }
 
-    public boolean isValidMove(Coordinates newPos) {
+    public boolean isValidMove(Coordinates newPos, Coordinates oldPos) {
         if (newPos.getX() < 0 || newPos.getY() < 0) return false;
-        int moveX = position.getX() - newPos.getX();
-        int moveY = position.getY() - newPos.getY();
+        int moveX = oldPos.getX() - newPos.getX();
+        int moveY = oldPos.getY() - newPos.getY();
         if (this.getColor() == ColorEnum.WHITE) {
             if (moveX == 1 && moveY == 1) return true;
             else if (moveX == 2 && moveY == 2) return true;
