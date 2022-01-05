@@ -14,50 +14,50 @@ public class Game implements GameInterface {
     private Board board;
     private Pawn[][] pawnBoard;
     private boolean isGameRunning;
+    private boolean hasWon;
 
 
     public void start() {
-        int player = 1; //should be replaced with Pawn instance
+
         TerminalView.clearScreen();
         int size;
         boolean isInputValid;
+
         do {
             String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
             isInputValid = userInput.matches("^\\d{2}$") && Integer.parseInt(userInput) > 9 && Integer.parseInt(userInput) < 21;
             if (!isInputValid) System.out.print("Invalid input. Please retry. ");
             size = Integer.parseInt(userInput);
         } while (!isInputValid);
+
         board = new Board(size);
-        //this.isGameRunning = true; //commented out to prevent infinite loop
-        while (isGameRunning) {
-            playRound();    // valszeg kell neki egy player parameter
-            player = player == 1 ? 2 : 1;   //should be replaced with Pawn instance
-        }
+        board.initBoard(size);
+        playRound();
+
     }
 
     public void playRound() {
         TerminalView.clearScreen();
         TerminalView.printBoard(board);
-        //getMove(int player);
-        //Pawn.isValidMove(Coordinates newPos);
-        //tryToMakeMove;
-        //Board.movePawn();
-        //Board.removePawn(); - if needed
-        //checkForWinner(); -> ennek kellenne meghívni a printWinner metodust
-        //printWinner(pawnBoard); // only prints if there is a winner
+        System.out.println("White pawn makes the first move.");
+        do {
+            if (pawn.getColor().equals("white")) {
+
+            }
+
+
+        } while (!(hasWon));
+
+        TerminalView.clearScreen();
+        TerminalView.printBoard(board);
+        printWinner(pawnBoard);
 
     }
 
-    // move can be made if:
-    // 1. move is from a black to another black field
-    // 2. starting field has a pawn
-    // 3. target field is empty
-    // returns true if move is valid -> Board movePawn()
-    // returns false if move isn't valid -> player needs to provide another input
+
     public boolean tryToMakeMove(Pawn[][] board, int fromX, int fromY, int toX, int toY) {
         boolean isMoveOK = false;
         if (board[fromX][fromY] != null && board[toX][toY] == null && targetFieldIsBlack(board)) {
-            //Board.movePawn(); to be implemented in Board class;
             isMoveOK = true;
         } else {
             System.out.println("This is not a valid move. Try again.");
@@ -107,13 +107,16 @@ public class Game implements GameInterface {
         }
         if (blacks == 0) {
             winner = "white";
+
         } else if (whites == 0) {
             winner = "black";
+
         }
+        hasWon = true;
         return winner;
     }
 
-    // should be moved to TerminalView
+
     public void printWinner(Pawn[][] board) {
         String winner = checkForWinner(board);
         String messageOnConsole = "";
