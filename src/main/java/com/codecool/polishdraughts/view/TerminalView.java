@@ -25,11 +25,9 @@ public class TerminalView {
 
     public static boolean isMenuInputValid(String userInput) {
         return userInput.matches("^[1-9]$");
-
     }
 
-    public void printBoard(Board board) {
+    public static void printBoard(Board board) {
         System.out.println(board.toString());
-
     }
 }
