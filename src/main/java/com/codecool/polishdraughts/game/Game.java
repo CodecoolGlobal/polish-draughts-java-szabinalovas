@@ -2,6 +2,7 @@ package com.codecool.polishdraughts.game;
 
 import com.codecool.polishdraughts.board.Board;
 import com.codecool.polishdraughts.pieces.ColorEnum;
+import com.codecool.polishdraughts.pieces.Coordinates;
 import com.codecool.polishdraughts.pieces.Pawn;
 import com.codecool.polishdraughts.view.TerminalView;
 
@@ -58,6 +59,20 @@ public class Game implements GameInterface {
             System.out.println("This is not a valid move. Try again.");
         }
         return isMoveOK;
+    }
+
+    public boolean twoFieldJump(int fromX, int fromY, int toX, int toY) {
+        boolean isTwoField = false;
+        int moveX = fromX - toX;
+        int moveY = fromY - toY;
+        if (moveX == Math.abs(2) && moveY == Math.abs(2)) {
+            isTwoField = true;
+        }
+        return isTwoField;
+    }
+
+    public Coordinates interfieldCoord(int fromX, int fromY, int toX, int toY) {
+        return new Coordinates(Math.abs((fromX + toX) / 2), Math.abs((fromY + toY) / 2));
     }
 
     public boolean targetFieldIsBlack(Pawn[][] board) {
