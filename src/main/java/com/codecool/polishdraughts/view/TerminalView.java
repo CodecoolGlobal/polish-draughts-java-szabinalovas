@@ -25,10 +25,8 @@ public class TerminalView {
     }
 
     public static boolean isValidPlayer(String player, Board board, Coordinates coordinates) {
-        if(board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] == null){
-            return false;
-        }
-        return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
+        return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] != null ||
+                !board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
     }
 
     public static boolean isMenuInputValid(String userInput) {

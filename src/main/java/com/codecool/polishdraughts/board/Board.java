@@ -8,7 +8,6 @@ public class Board {
 
     private String[][] board;
     private Pawn[][] pawnsBoard;
-    private final int NUMBER_OF_INIT_PAWN_LINES = 4;
 
     public String[][] getBoard() {
         return board;
@@ -45,7 +44,7 @@ public class Board {
                 if (getPawnsBoard()[y][x] != null) {
                     getBoard()[y][x] = getPawnsBoard()[y][x].getColor().getPawnChar();
                 }
-                sb.append("  " + getBoard()[y][x]);
+                sb.append("  ").append(getBoard()[y][x]);
             }
             sb.append("\n");
         }
@@ -70,6 +69,7 @@ public class Board {
     public Pawn[][] initPawnsBoard(int n) {
         pawnsBoard = new Pawn[n][n];
         // az első 4 sor fekete mezőire pakolja a fekete gyalogokat
+        int NUMBER_OF_INIT_PAWN_LINES = 4;
         for (int y = 0; y < NUMBER_OF_INIT_PAWN_LINES; y++) {
             for (int x = 0; x < pawnsBoard[0].length; x++) {
                 if (!((y % 2 == 0 && x % 2 == 0) || (y % 2 != 0 && x % 2 != 0))) {
@@ -91,17 +91,17 @@ public class Board {
     public void removePawn(Pawn pawnToRemove) {
         int x = pawnToRemove.getPosition().getX();
         int y = pawnToRemove.getPosition().getY();
-        pawnsBoard[x][y] = null;
-        board[x][y] = "#";
+        pawnsBoard[y][x] = null;
+        board[y][x] = "#";
         pawnToRemove.setPosition(new Coordinates(-1, -1));
     }
 
     public void movePawn(Pawn movingPawn, Coordinates toCoordinates) {
         int oldX = movingPawn.getPosition().getX();
         int oldY = movingPawn.getPosition().getY();
-        pawnsBoard[oldX][oldY] = null;
-        board[oldX][oldY] = "#";
+        pawnsBoard[oldY][oldX] = null;
+        board[oldY][oldX] = "#";
         movingPawn.setPosition(toCoordinates);
-        pawnsBoard[toCoordinates.getX()][toCoordinates.getY()] = movingPawn;
+        pawnsBoard[toCoordinates.getY()][toCoordinates.getX()] = movingPawn;
     }
 }

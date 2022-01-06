@@ -7,14 +7,13 @@ import com.codecool.polishdraughts.pieces.Pawn;
 import com.codecool.polishdraughts.view.TerminalView;
 
 public class Game implements GameInterface {
-    private static final int NUMBER_OF_COORDINATE_ELEMENTS = 2;
+
     private static final int ASCII_DEC_CODE_UPPERCASE_LETTER_A = 65;
     private static final int INDEX_CORRECTION = 1;
-    private static final int MAX_NUMBER_OF_ROWS_AND_COLUMNS = 20;
-    private Board board;
-    private Pawn[][] pawnBoard;
-    private boolean isGameRunning;
 
+    private Board board;
+
+    private boolean isGameRunning;
 
 
     public void start() {
@@ -40,7 +39,8 @@ public class Game implements GameInterface {
         TerminalView.clearScreen();
         TerminalView.printBoard(board);
         Pawn actualPlayer = chooseValidPlayer(player);
-        chooseValidStep(actualPlayer);
+        Coordinates toCoordinate = chooseValidStep(actualPlayer);
+        board.movePawn(actualPlayer, toCoordinate);
         //Pawn.isValidMove(Coordinates newPos);
         //tryToMakeMove;
         //Board.movePawn();
@@ -59,9 +59,8 @@ public class Game implements GameInterface {
     public boolean tryToMakeMove(Pawn actualPlayer, Coordinates toCoordinate) {
         boolean isMoveOK = false;
         if ((actualPlayer != null && toCoordinate != null) &&
-                ( board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null &&
-                targetFieldIsBlack(toCoordinate, actualPlayer))) {
-            board.movePawn(actualPlayer, toCoordinate); //to be implemented in Board class;
+                (board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null &&
+                        targetFieldIsBlack(actualPlayer))) {
             isMoveOK = true;
         } else {
             System.out.println("This is not a valid move. Try again.");
@@ -83,7 +82,7 @@ public class Game implements GameInterface {
         return new Coordinates(Math.abs((fromX + toX) / 2), Math.abs((fromY + toY) / 2));
     }
 
-    public boolean targetFieldIsBlack(Coordinates toCoordinates, Pawn actualPlayer) {
+    public boolean targetFieldIsBlack(Pawn actualPlayer) {
 
         boolean isTargetBlack = false;
         for (int i = 0; i < board.getBoard().length; i++) {
@@ -102,11 +101,11 @@ public class Game implements GameInterface {
         int blacks = 0;
         int whites = 0;
         String winner = "";
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j].getColor().equals(ColorEnum.BLACK)) {
+        for (Pawn[] pawns : board) {
+            for (Pawn pawn : pawns) {
+                if (pawn.getColor().equals(ColorEnum.BLACK)) {
                     blacks++;
-                } else if (board[i][j].getColor().equals(ColorEnum.WHITE)) {
+                } else if (pawn.getColor().equals(ColorEnum.WHITE)) {
                     whites++;
                 }
             }
@@ -195,6 +194,5 @@ public class Game implements GameInterface {
         } while (isCoordinatesOutsideBoard || !isInputFormatValid || !tryToMakeMove || !isValidMove);
 
         return toCoordinate;
-
     }
 }
