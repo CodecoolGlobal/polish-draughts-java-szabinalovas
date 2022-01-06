@@ -3,6 +3,7 @@ package com.codecool.polishdraughts.view;
 import java.util.Scanner;
 
 import com.codecool.polishdraughts.board.Board;
+import com.codecool.polishdraughts.pieces.Coordinates;
 
 public class TerminalView {
 
@@ -21,6 +22,11 @@ public class TerminalView {
 
     public static boolean isCoordinatesInputFormatValid(String userInput) {
         return userInput.matches("^[A-Z]\\d{1,2}$");
+    }
+
+    public static boolean isValidPlayer(String player, Board board, Coordinates coordinates) {
+        return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] != null ||
+                !board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
     }
 
     public static boolean isMenuInputValid(String userInput) {

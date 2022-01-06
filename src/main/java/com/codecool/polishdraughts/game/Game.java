@@ -7,38 +7,40 @@ import com.codecool.polishdraughts.pieces.Pawn;
 import com.codecool.polishdraughts.view.TerminalView;
 
 public class Game implements GameInterface {
-    private static final int NUMBER_OF_COORDINATE_ELEMENTS = 2;
+
     private static final int ASCII_DEC_CODE_UPPERCASE_LETTER_A = 65;
     private static final int INDEX_CORRECTION = 1;
-    private static final int MAX_NUMBER_OF_ROWS_AND_COLUMNS = 20;
+
     private Board board;
-    private Pawn[][] pawnBoard;
+
     private boolean isGameRunning;
 
 
     public void start() {
-        int player = 1; //should be replaced with Pawn instance
+        String player = "O"; //should be replaced with Pawn instance
         TerminalView.clearScreen();
         int size;
         boolean isInputValid;
         do {
             String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
-            isInputValid = userInput.matches("^\\d{2}$") && Integer.parseInt(userInput) > 9 && Integer.parseInt(userInput) < 21;
+            isInputValid = userInput.matches("^\\d{2}$") && (Integer.parseInt(userInput) > 9) && (Integer.parseInt(userInput) < 21);
             if (!isInputValid) System.out.print("Invalid input. Please retry. ");
             size = Integer.parseInt(userInput);
         } while (!isInputValid);
         board = new Board(size);
-        //this.isGameRunning = true; //commented out to prevent infinite loop
+        this.isGameRunning = true; //commented out to prevent infinite loop
         while (isGameRunning) {
-            playRound();    // valszeg kell neki egy player parameter
-            player = player == 1 ? 2 : 1;   //should be replaced with Pawn instance
+            playRound(player);    // valszeg kell neki egy player parameter
+            player = player.equals("O") ? "X" : "O";   //should be replaced with Pawn instance
         }
     }
 
-    public void playRound() {
+    public void playRound(String player) {
         TerminalView.clearScreen();
         TerminalView.printBoard(board);
-        //getMove(int player);
+        Pawn actualPlayer = chooseValidPlayer(player);
+        Coordinates toCoordinate = chooseValidStep(actualPlayer);
+        board.movePawn(actualPlayer, toCoordinate);
         //Pawn.isValidMove(Coordinates newPos);
         //tryToMakeMove;
         //Board.movePawn();
@@ -54,10 +56,11 @@ public class Game implements GameInterface {
     // 3. target field is empty
     // returns true if move is valid -> Board movePawn()
     // returns false if move isn't valid -> player needs to provide another input
-    public boolean tryToMakeMove(Pawn[][] board, int fromX, int fromY, int toX, int toY) {
+    public boolean tryToMakeMove(Pawn actualPlayer, Coordinates toCoordinate) {
         boolean isMoveOK = false;
-        if (board[fromX][fromY] != null && board[toX][toY] == null && targetFieldIsBlack(board)) {
-            //Board.movePawn(); to be implemented in Board class;
+        if ((actualPlayer != null && toCoordinate != null) &&
+                (board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null &&
+                        targetFieldIsBlack(actualPlayer))) {
             isMoveOK = true;
         } else {
             System.out.println("This is not a valid move. Try again.");
@@ -79,16 +82,18 @@ public class Game implements GameInterface {
         return new Coordinates(Math.abs((fromX + toX) / 2), Math.abs((fromY + toY) / 2));
     }
 
-    public boolean targetFieldIsBlack(Pawn[][] board) {
+    public boolean targetFieldIsBlack(Pawn actualPlayer) {
+
         boolean isTargetBlack = false;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard()[i].length; j++) {
                 if ((i + j) % 2 != 0) {
                     isTargetBlack = true;
                 }
             }
         }
         return isTargetBlack;
+
     }
 
     // checks the colorEnum of pawns on each field
@@ -96,11 +101,11 @@ public class Game implements GameInterface {
         int blacks = 0;
         int whites = 0;
         String winner = "";
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j].getColor().equals(ColorEnum.BLACK)) {
+        for (Pawn[] pawns : board) {
+            for (Pawn pawn : pawns) {
+                if (pawn.getColor().equals(ColorEnum.BLACK)) {
                     blacks++;
-                } else if (board[i][j].getColor().equals(ColorEnum.WHITE)) {
+                } else if (pawn.getColor().equals(ColorEnum.WHITE)) {
                     whites++;
                 }
             }
@@ -117,20 +122,21 @@ public class Game implements GameInterface {
     public void printWinner(Pawn[][] board) {
         String winner = checkForWinner(board);
         String messageOnConsole = "";
-        if (winner.equals( "white")) {
+        if (winner.equals("white")) {
             messageOnConsole = "White has won.";
-        } else if (winner.equals( "black")) {
+        } else if (winner.equals("black")) {
             messageOnConsole = "Black has won.";
         }
         System.out.println(messageOnConsole);
         isGameRunning = false;
     }
 
-    public int[] getMove(int player) {
-        int[] coordinates = new int[NUMBER_OF_COORDINATE_ELEMENTS];
+    public Pawn chooseValidPlayer(String player) {
         String userInput;
         boolean isCoordinatesOutsideBoard = false;
         boolean isInputFormatValid;
+        boolean isValidPlayer = false;
+        Coordinates fromCoordinate = null;
         do {
             userInput = TerminalView.readInput("Player " + player + " comes next:");
             isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
@@ -138,14 +144,55 @@ public class Game implements GameInterface {
                 System.out.println("Invalid input format. Please retry.");
                 continue;
             }
-            coordinates[0] = userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A;
-            coordinates[1] = Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION;
+            fromCoordinate = new Coordinates(userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A,
+                    Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION);
 
-            isCoordinatesOutsideBoard = coordinates[0] > board.getSize() - INDEX_CORRECTION || coordinates[1] > board.getSize() - INDEX_CORRECTION;
+            isCoordinatesOutsideBoard = fromCoordinate.getX() > board.getSize() - INDEX_CORRECTION || fromCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
             if (isCoordinatesOutsideBoard) {
                 System.out.println("Invalid input: coordinates are outside of board. Please retry.");
             }
-        } while (isCoordinatesOutsideBoard || !isInputFormatValid);
-        return coordinates;
+            isValidPlayer = TerminalView.isValidPlayer(player, board, fromCoordinate);
+            if (!isValidPlayer) {
+                System.out.println("Invalid player.");
+            }
+
+        } while (isCoordinatesOutsideBoard || !isInputFormatValid || !isValidPlayer);
+
+        return board.getPawnsBoard()[fromCoordinate.getY()][fromCoordinate.getX()];
+    }
+
+    public Coordinates chooseValidStep(Pawn actualPlayer) {
+        String userInput;
+        boolean isCoordinatesOutsideBoard = false;
+        boolean isInputFormatValid;
+        boolean tryToMakeMove = false;
+        boolean isValidMove = false;
+        Coordinates toCoordinate = null;
+        do {
+            userInput = TerminalView.readInput("Pick a valid coordinate:");
+            isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
+            if (!isInputFormatValid) {
+                System.out.println("Invalid input format. Please retry.");
+                continue;
+            }
+            toCoordinate = new Coordinates(userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A,
+                    Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION);
+
+            isCoordinatesOutsideBoard = toCoordinate.getX() > board.getSize() - INDEX_CORRECTION || toCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
+            if (isCoordinatesOutsideBoard) {
+                System.out.println("Invalid input: coordinates are outside of board. Please retry.");
+            }
+            tryToMakeMove = tryToMakeMove(actualPlayer, toCoordinate);
+            if (!tryToMakeMove) {
+                System.out.println("Invalid move.");
+            }
+            isValidMove = actualPlayer.isValidMove(toCoordinate, actualPlayer.getPosition());
+            if (!isValidMove) {
+                System.out.println("Invalid move.");
+            }
+
+        } while (isCoordinatesOutsideBoard || !isInputFormatValid || !tryToMakeMove || !isValidMove);
+
+        return toCoordinate;
     }
 }
