@@ -31,7 +31,7 @@ public class Game implements GameInterface {
         this.isGameRunning = true;
         while (isGameRunning) {
             playRound(player);
-            player = player.equals("O") ? "X" : "O";
+            player = player.equals("O") ? ColorEnum.BLACK.getPawnChar() : "O";
         }
     }
 
@@ -39,7 +39,20 @@ public class Game implements GameInterface {
         TerminalView.clearScreen();
         TerminalView.printBoard(board);
         actualPlayer = chooseValidPlayer(player);
-        Coordinates toCoordinate = chooseValidStep(actualPlayer);
+        boolean isValidMove = false;
+        Coordinates toCoordinate = null;
+        do {
+            String userInput = askForNextMove();
+            if (userInput.equalsIgnoreCase("s")) {
+                actualPlayer = chooseValidPlayer(player);
+            } else {
+                toCoordinate = convertToCoordinate(userInput);
+                isValidMove = isValidMove(toCoordinate);
+            }
+
+        } while (!isValidMove);
+
+        //move-szerű metódusba kiszervezni
         Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
         if (twoFieldJump(actualPlayer.getPosition(), toCoordinate) && TerminalView.isValidEnemy(player, board, interfieldCoordinate)) {
             board.removePawn(board.getPawnsBoard()[interfieldCoordinate.getY()][interfieldCoordinate.getX()]);
@@ -51,22 +64,46 @@ public class Game implements GameInterface {
 
     }
 
-    // move can be made if:
-    // 1. move is from a black to another black field
-    // 2. starting field has a pawn
-    // 3. target field is empty
-    // returns true if move is valid -> Board movePawn()
-    // returns false if move isn't valid -> player needs to provide another input
-    public boolean tryToMakeMove(Pawn actualPlayer, Coordinates toCoordinate) {
-        boolean isMoveOK = false;
-        if ((actualPlayer != null && toCoordinate != null) &&
-                (board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null &&
-                        targetFieldIsBlack())) {
-            isMoveOK = true;
-        } else {
-            System.out.println("This is not a valid move. Try again.");
+    private Coordinates convertToCoordinate(String userInput) {
+        return new Coordinates(userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A,
+                Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION);
+    }
+
+    private String askForNextMove() {
+        String userInput = TerminalView.readInput("Pick a valid coordinate or select another Pawn (s): ");
+        boolean isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
+        if (!isInputFormatValid && !userInput.equalsIgnoreCase("s")) {
+            System.out.println("Invalid input format. Please retry.");
         }
-        return isMoveOK;
+        return userInput;
+    }
+
+    private boolean isValidMove(Coordinates toCoordinate) {
+        return !isCoordinatesOutsideBoard(toCoordinate) &&
+                isActualPlayerSelected() &&
+                isToCoordinateEmpty(toCoordinate) &&
+                actualPlayer.isValidMoveByGameRules(toCoordinate, actualPlayer.getPosition()) &&
+                !isTwoFieldJumpAndNotEnemyPlayer(toCoordinate) &&
+                isTargetFieldIsBlack();
+    }
+
+    private boolean isTwoFieldJumpAndNotEnemyPlayer(Coordinates toCoordinate) {
+        boolean twoFieldJump = twoFieldJump(actualPlayer.getPosition(), toCoordinate);
+        Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
+        return twoFieldJump && !TerminalView.isValidEnemy(player, board, interfieldCoordinate);
+    }
+
+    private boolean isToCoordinateEmpty(Coordinates toCoordinate) {
+        return board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null;
+    }
+
+    private boolean isActualPlayerSelected() {
+        return actualPlayer != null;
+    }
+
+    private boolean isCoordinatesOutsideBoard(Coordinates toCoordinate) {
+        return toCoordinate.getX() > board.getSize() - INDEX_CORRECTION
+                || toCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
     }
 
     public boolean twoFieldJump(Coordinates fromCoordinate, Coordinates toCoordinates) {
@@ -84,8 +121,7 @@ public class Game implements GameInterface {
                 Math.abs((fromCoordinate.getX() + toCoordinates.getX()) / 2));
     }
 
-    public boolean targetFieldIsBlack() {
-
+    public boolean isTargetFieldIsBlack() {
         boolean isTargetBlack = false;
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard()[i].length; j++) {
@@ -95,10 +131,8 @@ public class Game implements GameInterface {
             }
         }
         return isTargetBlack;
-
     }
 
-    // checks the colorEnum of pawns on each field
     public String checkForWinner(Pawn[][] board) {
         int blacks = 0;
         int whites = 0;
@@ -141,13 +175,13 @@ public class Game implements GameInterface {
         Coordinates fromCoordinate = null;
         do {
             userInput = TerminalView.readInput("Player " + player + " comes next:");
+
             isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
             if (!isInputFormatValid) {
                 System.out.println("Invalid input format. Please retry.");
                 continue;
             }
-            fromCoordinate = new Coordinates(userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A,
-                    Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION);
+            fromCoordinate = convertToCoordinate(userInput);
 
             isCoordinatesOutsideBoard = fromCoordinate.getX() > board.getSize() - INDEX_CORRECTION || fromCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
             if (isCoordinatesOutsideBoard) {
@@ -163,62 +197,4 @@ public class Game implements GameInterface {
 
         return board.getPawnsBoard()[fromCoordinate.getY()][fromCoordinate.getX()];
     }
-
-    public Coordinates chooseValidStep(Pawn actualPlayer) {
-        String userInput;
-        boolean isCoordinatesOutsideBoard = false;
-        boolean isInputFormatValid = false;
-        boolean tryToMakeMove = false;
-        boolean isValidMove = false;
-        Coordinates toCoordinate = null;
-        boolean twoFieldJump;
-        Coordinates interfieldCoordinate;
-        boolean isTwoFieldJumpAndNotEnemyPlayer = false;
-
-        do {
-            userInput = TerminalView.readInput("Pick a valid coordinate or select another Pawn (s): ");
-            if (userInput.equalsIgnoreCase("s")) {
-                actualPlayer = chooseValidPlayer(player);
-                continue;
-            }
-            isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
-            if (!isInputFormatValid) {
-                System.out.println("Invalid input format. Please retry.");
-                continue;
-            }
-            toCoordinate = new Coordinates(userInput.charAt(0) - ASCII_DEC_CODE_UPPERCASE_LETTER_A,
-                    Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION);
-
-            isCoordinatesOutsideBoard = toCoordinate.getX() > board.getSize() - INDEX_CORRECTION || toCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
-            if (isCoordinatesOutsideBoard) {
-                System.out.println("Invalid input: coordinates are outside of board. Please retry.");
-            }
-            tryToMakeMove = tryToMakeMove(actualPlayer, toCoordinate);
-            if (!tryToMakeMove) {
-                System.out.println("Try invalid move.");
-            }
-            isValidMove = actualPlayer.isValidMove(toCoordinate, actualPlayer.getPosition());
-            if (!isValidMove) {
-                System.out.println("Pawn invalid move.");
-            }
-
-            twoFieldJump = twoFieldJump(actualPlayer.getPosition(), toCoordinate);
-            interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
-
-            isTwoFieldJumpAndNotEnemyPlayer = twoFieldJump && !TerminalView.isValidEnemy(player, board, interfieldCoordinate);
-            if (isTwoFieldJumpAndNotEnemyPlayer) {
-                System.out.println("Two field invalid move.");
-            }
-
-        } while (isCoordinatesOutsideBoard || !isInputFormatValid || !tryToMakeMove || !isValidMove || isTwoFieldJumpAndNotEnemyPlayer);
-
-        return toCoordinate;
-    }
-
-    public void changePawn(String player) {
-        if (TerminalView.readInput("Select another Pawn: ").equals("0")) {
-
-        }
-    }
-
 }
