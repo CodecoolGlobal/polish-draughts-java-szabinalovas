@@ -25,11 +25,6 @@ public class Pawn {
         return this.color.getPawnChar();
     }
 
-
-    public void setColor(ColorEnum color) {
-        this.color = color;
-    }
-
     public Coordinates getPosition() {
         return position;
     }

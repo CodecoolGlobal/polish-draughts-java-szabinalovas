@@ -79,23 +79,32 @@ public class Game implements GameInterface {
     }
 
     private boolean isValidMove(Coordinates toCoordinate) {
-        boolean isCoordinatesOutsideBoard = toCoordinate.getX() > board.getSize() - INDEX_CORRECTION
-                || toCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
-
-        boolean isActualPlayerSelected = actualPlayer != null;
-        boolean isToCoordinateEmpty = board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null;
-
-        boolean isValidMoveByGameRules = actualPlayer.isValidMoveByGameRules(toCoordinate, actualPlayer.getPosition());
-
-        boolean twoFieldJump = twoFieldJump(actualPlayer.getPosition(), toCoordinate);
-        Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
-
-        boolean isTwoFieldJumpAndNotEnemyPlayer = twoFieldJump && !TerminalView.isValidEnemy(player, board, interfieldCoordinate);
-
-        return !isCoordinatesOutsideBoard && isActualPlayerSelected && isToCoordinateEmpty &&
-                isValidMoveByGameRules && !isTwoFieldJumpAndNotEnemyPlayer && isTargetFieldIsBlack();
+        return !isCoordinatesOutsideBoard(toCoordinate) &&
+                isActualPlayerSelected() &&
+                isToCoordinateEmpty(toCoordinate) &&
+                actualPlayer.isValidMoveByGameRules(toCoordinate, actualPlayer.getPosition()) &&
+                !isTwoFieldJumpAndNotEnemyPlayer(toCoordinate) &&
+                isTargetFieldIsBlack();
     }
 
+    private boolean isTwoFieldJumpAndNotEnemyPlayer(Coordinates toCoordinate) {
+        boolean twoFieldJump = twoFieldJump(actualPlayer.getPosition(), toCoordinate);
+        Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
+        return twoFieldJump && !TerminalView.isValidEnemy(player, board, interfieldCoordinate);
+    }
+
+    private boolean isToCoordinateEmpty(Coordinates toCoordinate) {
+        return board.getPawnsBoard()[toCoordinate.getY()][toCoordinate.getX()] == null;
+    }
+
+    private boolean isActualPlayerSelected() {
+        return actualPlayer != null;
+    }
+
+    private boolean isCoordinatesOutsideBoard(Coordinates toCoordinate) {
+        return toCoordinate.getX() > board.getSize() - INDEX_CORRECTION
+                || toCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
+    }
 
     public boolean twoFieldJump(Coordinates fromCoordinate, Coordinates toCoordinates) {
         boolean isTwoField = false;
@@ -113,7 +122,6 @@ public class Game implements GameInterface {
     }
 
     public boolean isTargetFieldIsBlack() {
-
         boolean isTargetBlack = false;
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard()[i].length; j++) {
@@ -123,10 +131,8 @@ public class Game implements GameInterface {
             }
         }
         return isTargetBlack;
-
     }
 
-    // checks the colorEnum of pawns on each field
     public String checkForWinner(Pawn[][] board) {
         int blacks = 0;
         int whites = 0;
