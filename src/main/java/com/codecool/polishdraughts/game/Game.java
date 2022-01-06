@@ -52,16 +52,14 @@ public class Game implements GameInterface {
 
         } while (!isValidMove);
 
-        //move-szerű metódusba kiszervezni
         Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
         if (twoFieldJump(actualPlayer.getPosition(), toCoordinate) && TerminalView.isValidEnemy(player, board, interfieldCoordinate)) {
             board.removePawn(board.getPawnsBoard()[interfieldCoordinate.getY()][interfieldCoordinate.getX()]);
         }
         board.movePawn(actualPlayer, toCoordinate);
 
-        //checkForWinner(); -> ennek kellenne meghívni a printWinner metodust
+        //checkForWinner();
         //printWinner(pawnBoard); // only prints if there is a winner
-
     }
 
     private Coordinates convertToCoordinate(String userInput) {
