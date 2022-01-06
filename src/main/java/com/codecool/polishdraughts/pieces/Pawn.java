@@ -46,7 +46,7 @@ public class Pawn {
         isCrowned = crowned;
     }
 
-    public boolean isValidMove(Coordinates newPos, Coordinates oldPos) {
+    public boolean isValidMoveByGameRules(Coordinates newPos, Coordinates oldPos) {
         if (newPos.getX() < 0 || newPos.getY() < 0) return false;
         int moveX = oldPos.getX() - newPos.getX();
         int moveY = oldPos.getY() - newPos.getY();

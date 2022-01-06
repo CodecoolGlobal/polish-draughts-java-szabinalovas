@@ -28,6 +28,7 @@ public class TerminalView {
         return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] != null ||
                 !board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
     }
+
     public static boolean isValidEnemy(String player, Board board, Coordinates coordinates) {
         return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] != null &&
                 !board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
