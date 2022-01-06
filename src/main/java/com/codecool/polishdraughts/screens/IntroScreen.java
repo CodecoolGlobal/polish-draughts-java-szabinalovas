@@ -36,7 +36,7 @@ public class IntroScreen implements Screen {
         } while (!isInputValid);
         switch (userInput) {
             case "1":
-                //Implement game rules screen here
+                GameRules.gameRules();
             case "2":
                 game.start();
                 break;
@@ -44,7 +44,6 @@ public class IntroScreen implements Screen {
                 System.exit(0);
         }
     }
-
 }
 
 
