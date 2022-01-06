@@ -41,10 +41,10 @@ public class Pawn {
         isCrowned = crowned;
     }
 
-    public boolean isValidMoveByGameRules(Coordinates newPos, Coordinates oldPos) {
+    public boolean isValidMoveByGameRules(Coordinates newPos) {
         if (newPos.getX() < 0 || newPos.getY() < 0) return false;
-        int moveX = oldPos.getX() - newPos.getX();
-        int moveY = oldPos.getY() - newPos.getY();
+        int moveX = getPosition().getX() - newPos.getX();
+        int moveY = getPosition().getY() - newPos.getY();
         if (this.getColor() == ColorEnum.WHITE) {
             if (moveX == 1 && moveY == 1) return true;
             else if (moveX == 2 && moveY == 2) return true;

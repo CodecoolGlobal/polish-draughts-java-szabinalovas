@@ -82,7 +82,7 @@ public class Game implements GameInterface {
         return !isCoordinatesOutsideBoard(toCoordinate) &&
                 isActualPlayerSelected() &&
                 isToCoordinateEmpty(toCoordinate) &&
-                actualPlayer.isValidMoveByGameRules(toCoordinate, actualPlayer.getPosition()) &&
+                actualPlayer.isValidMoveByGameRules(toCoordinate) &&
                 !isTwoFieldJumpAndNotEnemyPlayer(toCoordinate) &&
                 isTargetFieldIsBlack();
     }
