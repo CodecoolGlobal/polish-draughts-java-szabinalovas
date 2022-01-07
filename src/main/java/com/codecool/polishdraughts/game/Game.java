@@ -62,11 +62,10 @@ public class Game implements GameInterface {
             board.removePawn(board.getPawnsBoard()[interfieldCoordinate.getY()][interfieldCoordinate.getX()]);
         }
         board.movePawn(actualPlayer, toCoordinate);
-
         String winner = checkForWinner(board.getPawnsBoard());
         if (winner.length() > 0) {
             isGameRunning = false;
-            System.out.println(winner + "has won"); //replace with printWinner
+            TerminalView.printWinner(winner);
         }
     }
 
@@ -160,19 +159,6 @@ public class Game implements GameInterface {
             winner = "black";
         }
         return winner;
-    }
-
-    // should be moved to TerminalView
-    public void printWinner(Pawn[][] board) {
-        String winner = checkForWinner(board);
-        String messageOnConsole = "";
-        if (winner.equals("white")) {
-            messageOnConsole = "White has won.";
-        } else if (winner.equals("black")) {
-            messageOnConsole = "Black has won.";
-        }
-        System.out.println(messageOnConsole);
-        isGameRunning = false;
     }
 
     public Pawn chooseValidPlayer(String player) {
