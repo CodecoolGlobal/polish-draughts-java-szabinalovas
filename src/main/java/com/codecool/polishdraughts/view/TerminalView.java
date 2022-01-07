@@ -41,4 +41,8 @@ public class TerminalView {
     public static void printBoard(Board board) {
         System.out.println(board.toString());
     }
+
+    public static void printWinner(String winner) {
+        System.out.println("Player " + winner + " has won.");
+    }
 }

@@ -10,6 +10,8 @@ public class Game implements GameInterface {
 
     private static final int ASCII_DEC_CODE_UPPERCASE_LETTER_A = 65;
     private static final int INDEX_CORRECTION = 1;
+    public static final int MIN_NUMBER_OF_ROWS_AND_COLUMNS = 10;
+    public static final int MAX_NUMBER_OF_ROWS_AND_COLUMNS = 20;
 
     private Board board;
 
@@ -23,7 +25,9 @@ public class Game implements GameInterface {
         boolean isInputValid;
         do {
             String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
-            isInputValid = userInput.matches("^\\d{2}$") && (Integer.parseInt(userInput) > 9) && (Integer.parseInt(userInput) < 21);
+            isInputValid = userInput.matches("^\\d{2}$") &&
+                    (Integer.parseInt(userInput) >= MIN_NUMBER_OF_ROWS_AND_COLUMNS) &&
+                    (Integer.parseInt(userInput) <= MAX_NUMBER_OF_ROWS_AND_COLUMNS);
             if (!isInputValid) System.out.print("Invalid input. Please retry. ");
             size = Integer.parseInt(userInput);
         } while (!isInputValid);
@@ -57,9 +61,11 @@ public class Game implements GameInterface {
             board.removePawn(board.getPawnsBoard()[interfieldCoordinate.getY()][interfieldCoordinate.getX()]);
         }
         board.movePawn(actualPlayer, toCoordinate);
-
-        //checkForWinner();
-        //printWinner(pawnBoard); // only prints if there is a winner
+        String winner = checkForWinner(board.getPawnsBoard());
+        if (winner.length() > 0) {
+            isGameRunning = false;
+            TerminalView.printWinner(winner);
+        }
     }
 
     private Coordinates convertToCoordinate(String userInput) {
@@ -137,10 +143,12 @@ public class Game implements GameInterface {
         String winner = "";
         for (Pawn[] pawns : board) {
             for (Pawn pawn : pawns) {
-                if (pawn.getColor().equals(ColorEnum.BLACK)) {
-                    blacks++;
-                } else if (pawn.getColor().equals(ColorEnum.WHITE)) {
-                    whites++;
+                if (pawn != null) {
+                    if (pawn.getColor().equals(ColorEnum.BLACK)) {
+                        blacks++;
+                    } else if (pawn.getColor().equals(ColorEnum.WHITE)) {
+                        whites++;
+                    }
                 }
             }
         }
@@ -150,19 +158,6 @@ public class Game implements GameInterface {
             winner = "black";
         }
         return winner;
-    }
-
-    // should be moved to TerminalView
-    public void printWinner(Pawn[][] board) {
-        String winner = checkForWinner(board);
-        String messageOnConsole = "";
-        if (winner.equals("white")) {
-            messageOnConsole = "White has won.";
-        } else if (winner.equals("black")) {
-            messageOnConsole = "Black has won.";
-        }
-        System.out.println(messageOnConsole);
-        isGameRunning = false;
     }
 
     public Pawn chooseValidPlayer(String player) {
