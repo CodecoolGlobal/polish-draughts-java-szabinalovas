@@ -25,10 +25,9 @@ public class Game implements GameInterface {
         boolean isInputValid;
         do {
             String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
-            isInputValid = userInput.matches("^\\d{2}$");
-                    /*&&
+            isInputValid = userInput.matches("^\\d{2}$") &&
                     (Integer.parseInt(userInput) >= MIN_NUMBER_OF_ROWS_AND_COLUMNS) &&
-                    (Integer.parseInt(userInput) <= MAX_NUMBER_OF_ROWS_AND_COLUMNS);*/
+                    (Integer.parseInt(userInput) <= MAX_NUMBER_OF_ROWS_AND_COLUMNS);
             if (!isInputValid) System.out.print("Invalid input. Please retry. ");
             size = Integer.parseInt(userInput);
         } while (!isInputValid);
