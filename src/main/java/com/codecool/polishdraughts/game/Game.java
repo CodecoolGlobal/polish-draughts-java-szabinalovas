@@ -25,9 +25,10 @@ public class Game implements GameInterface {
         boolean isInputValid;
         do {
             String userInput = TerminalView.readInput("Give me a number between 10 and 20:");
-            isInputValid = userInput.matches("^\\d{2}$") &&
+            isInputValid = userInput.matches("^\\d{2}$");
+                    /*&&
                     (Integer.parseInt(userInput) >= MIN_NUMBER_OF_ROWS_AND_COLUMNS) &&
-                    (Integer.parseInt(userInput) <= MAX_NUMBER_OF_ROWS_AND_COLUMNS);
+                    (Integer.parseInt(userInput) <= MAX_NUMBER_OF_ROWS_AND_COLUMNS);*/
             if (!isInputValid) System.out.print("Invalid input. Please retry. ");
             size = Integer.parseInt(userInput);
         } while (!isInputValid);
@@ -62,8 +63,11 @@ public class Game implements GameInterface {
         }
         board.movePawn(actualPlayer, toCoordinate);
 
-        //checkForWinner();
-        //printWinner(pawnBoard); // only prints if there is a winner
+        String winner = checkForWinner(board.getPawnsBoard());
+        if (winner.length() > 0) {
+            isGameRunning = false;
+            System.out.println(winner + "has won"); //replace with printWinner
+        }
     }
 
     private Coordinates convertToCoordinate(String userInput) {
@@ -141,10 +145,12 @@ public class Game implements GameInterface {
         String winner = "";
         for (Pawn[] pawns : board) {
             for (Pawn pawn : pawns) {
-                if (pawn.getColor().equals(ColorEnum.BLACK)) {
-                    blacks++;
-                } else if (pawn.getColor().equals(ColorEnum.WHITE)) {
-                    whites++;
+                if (pawn != null) {
+                    if (pawn.getColor().equals(ColorEnum.BLACK)) {
+                        blacks++;
+                    } else if (pawn.getColor().equals(ColorEnum.WHITE)) {
+                        whites++;
+                    }
                 }
             }
         }
