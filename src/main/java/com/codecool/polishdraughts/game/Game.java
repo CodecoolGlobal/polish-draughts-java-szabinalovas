@@ -184,6 +184,7 @@ public class Game implements GameInterface {
             isCoordinatesOutsideBoard = fromCoordinate.getX() > board.getSize() - INDEX_CORRECTION || fromCoordinate.getY() > board.getSize() - INDEX_CORRECTION;
             if (isCoordinatesOutsideBoard) {
                 System.out.println("Invalid input: coordinates are outside of board. Please retry.");
+                continue;
             }
 
             isValidPlayer = TerminalView.isValidPlayer(player, board, fromCoordinate);
