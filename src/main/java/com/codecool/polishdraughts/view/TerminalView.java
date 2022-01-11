@@ -1,9 +1,8 @@
 package com.codecool.polishdraughts.view;
 
-import java.util.Scanner;
-
 import com.codecool.polishdraughts.board.Board;
-import com.codecool.polishdraughts.pieces.Coordinates;
+
+import java.util.Scanner;
 
 public class TerminalView {
 
