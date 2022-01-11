@@ -60,7 +60,7 @@ public class Game implements GameInterface {
         } while (!isValidMove);
 
         Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
-        if (twoFieldJump(actualPlayer.getPosition(), toCoordinate) && TerminalView.isValidEnemy(player, board, interfieldCoordinate)) {
+        if (twoFieldJump(actualPlayer.getPosition(), toCoordinate) && isValidEnemy(player, board, interfieldCoordinate)) {
             board.removePawn(board.getPawnsBoard()[interfieldCoordinate.getY()][interfieldCoordinate.getX()]);
         }
         board.movePawn(actualPlayer, toCoordinate);
@@ -78,7 +78,7 @@ public class Game implements GameInterface {
 
     private String askForNextMove() {
         String userInput = TerminalView.readInput("Pick a valid coordinate or select another Pawn (s): ");
-        boolean isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
+        boolean isInputFormatValid = isCoordinatesInputFormatValid(userInput);
         if (!isInputFormatValid && !userInput.equalsIgnoreCase("s")) {
             System.out.println("Invalid input format. Please retry.");
         }
@@ -97,7 +97,7 @@ public class Game implements GameInterface {
     private boolean isTwoFieldJumpAndNotEnemyPlayer(Coordinates toCoordinate) {
         boolean twoFieldJump = twoFieldJump(actualPlayer.getPosition(), toCoordinate);
         Coordinates interfieldCoordinate = interfieldCoordinate(actualPlayer.getPosition(), toCoordinate);
-        return twoFieldJump && !TerminalView.isValidEnemy(player, board, interfieldCoordinate);
+        return twoFieldJump && !isValidEnemy(player, board, interfieldCoordinate);
     }
 
     private boolean isToCoordinateEmpty(Coordinates toCoordinate) {
@@ -172,7 +172,7 @@ public class Game implements GameInterface {
         do {
             userInput = TerminalView.readInput("Player " + player + " comes next:");
 
-            isInputFormatValid = TerminalView.isCoordinatesInputFormatValid(userInput);
+            isInputFormatValid = isCoordinatesInputFormatValid(userInput);
             if (!isInputFormatValid) {
                 System.out.println("Invalid input format. Please retry.");
                 continue;
@@ -185,7 +185,7 @@ public class Game implements GameInterface {
                 continue;
             }
 
-            isValidPlayer = TerminalView.isValidPlayer(player, board, fromCoordinate);
+            isValidPlayer = isValidPlayer(player, board, fromCoordinate);
             if (!isValidPlayer) {
                 System.out.println("Invalid player.");
             }
@@ -193,5 +193,19 @@ public class Game implements GameInterface {
         } while (isCoordinatesOutsideBoard || !isInputFormatValid || !isValidPlayer);
 
         return board.getPawnsBoard()[fromCoordinate.getY()][fromCoordinate.getX()];
+    }
+
+    private boolean isCoordinatesInputFormatValid(String userInput) {
+        return userInput.matches("^[A-Z]\\d{1,2}$");
+    }
+
+    private boolean isValidPlayer(String player, Board board, Coordinates coordinates) {
+        return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] != null &&
+                board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
+    }
+
+    private boolean isValidEnemy(String player, Board board, Coordinates coordinates) {
+        return board.getPawnsBoard()[coordinates.getY()][coordinates.getX()] != null &&
+                !board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
     }
 }
