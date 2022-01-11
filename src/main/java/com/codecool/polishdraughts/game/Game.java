@@ -76,7 +76,7 @@ public class Game implements GameInterface {
                 Integer.parseInt(userInput.substring(1)) - INDEX_CORRECTION);
     }
 
-    private String askForNextMove() {
+    public String askForNextMove() {
         String userInput = TerminalView.readInput("Pick a valid coordinate or select another Pawn (s): ");
         boolean isInputFormatValid = isCoordinatesInputFormatValid(userInput);
         if (!isInputFormatValid && !userInput.equalsIgnoreCase("s")) {
