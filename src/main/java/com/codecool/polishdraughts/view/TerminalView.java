@@ -34,10 +34,6 @@ public class TerminalView {
                 !board.getPawnsBoard()[coordinates.getY()][coordinates.getX()].getPawnChar().equals(player);
     }
 
-    public static boolean isMenuInputValid(String userInput) {
-        return userInput.matches("^[1-9]$");
-    }
-
     public static void printBoard(Board board) {
         System.out.println(board.toString());
     }
