@@ -10,6 +10,10 @@ import java.io.IOException;
 public class IntroScreen implements Screen {
     private Game game = new Game();
 
+    private boolean isMenuInputValid(String userInput) {
+        return userInput.matches("^[1-9]$");
+    }
+
     @Override
     public void display() {
         try {
@@ -31,7 +35,7 @@ public class IntroScreen implements Screen {
         boolean isInputValid;
         do {
             userInput = TerminalView.readInput("");
-            isInputValid = TerminalView.isMenuInputValid(userInput);
+            isInputValid = isMenuInputValid(userInput);
             if (!isInputValid) System.out.print("Invalid input. Please retry:");
         } while (!isInputValid);
         switch (userInput) {
