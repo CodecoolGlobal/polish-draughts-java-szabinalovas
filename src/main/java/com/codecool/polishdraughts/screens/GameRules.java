@@ -3,8 +3,6 @@ package com.codecool.polishdraughts.screens;
 public class GameRules {
 
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String BLACK_BOLD = "\033[1;30m";
-    public static final String BLACK = "\033[0;30m";
     public static final String BLUE_BOLD_BRIGHT = "\033[1;94m";
     public static final String WHITE_BRIGHT = "\033[0;97m";
     public static final String BLUE_BACKGROUND = "\033[44m";

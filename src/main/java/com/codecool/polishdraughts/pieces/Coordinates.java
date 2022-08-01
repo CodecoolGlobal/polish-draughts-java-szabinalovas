@@ -1,8 +1,8 @@
 package com.codecool.polishdraughts.pieces;
 
 public class Coordinates {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public Coordinates(int y, int x) {
         this.x = x;
@@ -13,15 +13,7 @@ public class Coordinates {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 }

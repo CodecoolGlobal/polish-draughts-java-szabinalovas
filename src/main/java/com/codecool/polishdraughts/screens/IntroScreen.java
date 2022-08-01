@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class IntroScreen implements Screen {
-    private Game game = new Game();
+    private final Game game = new Game();
 
     private boolean isMenuInputValid(String userInput) {
         return userInput.matches("^[1-9]$");

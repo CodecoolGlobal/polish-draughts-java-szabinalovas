@@ -6,7 +6,7 @@ public class Pawn {
     public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
-    private ColorEnum color;
+    private final ColorEnum color;
     private Coordinates position;
     private boolean isCrowned;
 
@@ -31,14 +31,6 @@ public class Pawn {
 
     public void setPosition(Coordinates position) {
         this.position = position;
-    }
-
-    public boolean isCrowned() {
-        return isCrowned;
-    }
-
-    public void setCrowned(boolean crowned) {
-        isCrowned = crowned;
     }
 
     public boolean isValidMoveByGameRules(Coordinates newPos) {

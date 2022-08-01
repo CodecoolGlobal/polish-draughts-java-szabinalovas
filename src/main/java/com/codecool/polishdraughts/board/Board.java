@@ -68,7 +68,6 @@ public class Board {
 
     public Pawn[][] initPawnsBoard(int n) {
         pawnsBoard = new Pawn[n][n];
-        // az első 4 sor fekete mezőire pakolja a fekete gyalogokat
         final int NUMBER_OF_INIT_PAWN_LINES = 4;
         for (int y = 0; y < NUMBER_OF_INIT_PAWN_LINES; y++) {
             for (int x = 0; x < pawnsBoard[0].length; x++) {
@@ -77,7 +76,7 @@ public class Board {
                 }
             }
         }
-        // az utolsó 4 sor fekete mezőire pakolja a fehér gyalogokat
+
         for (int y = board.length - NUMBER_OF_INIT_PAWN_LINES; y < board.length; y++) {
             for (int x = 0; x < pawnsBoard[0].length; x++) {
                 if (!((y % 2 == 0 && x % 2 == 0) || (y % 2 != 0 && x % 2 != 0))) {
